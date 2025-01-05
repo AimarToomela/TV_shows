@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Your Favorite TV Shows</h1>
+    <div class="row">
+        {% for show in favorites %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <!-- Apply show-image class to make all images the same size -->
+                <img src="{{ show.image_url }}" class="card-img-top show-image" alt="{{ show.title }}">
+
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ show.title }}</h5>
+                    <!-- Details Button -->
+                    <a href="{% url 'details' show.id %}" class="btn btn-primary">Details</a>
+
+                    <!-- Remove from Favorites Button -->
+                    <form method="POST" action="{% url 'remove_from_favorites' show.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Remove from Favorites</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No favorite shows added yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

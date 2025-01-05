@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Featured TV Shows</h1>
+    <div class="row">
+        {% for show in tv_shows %}
+        <div class="col-md-4 mb-4">
+            <div class="card position-relative">
+                <!-- Image with standardized size -->
+                <img src="{{ show.image_url }}" class="card-img-top show-image" alt="{{ show.title }}">
+
+                <!-- Star icon for adding/removing from favorites -->
+                <form method="POST" action="{% if user.is_authenticated %}
+                    {% if show.is_favorite %}
+                        {% url 'remove_from_favorites' show.id %}
+                    {% else %}
+                        {% url 'add_to_favorites' show.id %}
+                    {% endif %}
+                {% else %}
+                    {% url 'login' %}
+                {% endif %}">
+                    {% csrf_token %}
+                    <button type="submit" class="position-absolute top-0 end-0 m-2 btn btn-link">
+                        <i class="fa fa-star" style="font-size: 1.5rem; {% if show.is_favorite %}
+                        color: gold;{% else %}color: gray;{% endif %}"></i>
+                    </button>
+                </form>
+
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ show.title }}</h5>
+                    <a href="{% url 'details' show.id %}" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
